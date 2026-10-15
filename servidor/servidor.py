@@ -4,19 +4,19 @@ import time
 import cv2
 import os
 
-from protocolo import receber_mensagem, enviar_mensagem
-from imagem import Imagem
+from utils.protocolo import receber_mensagem, enviar_mensagem
+from utils.imagem import Imagem
 
 def processar_imagem(img_obj):
     """
     Processa a imagem para detectar faces e desenhar retângulos.
     Não possui contato com a rede/sockets.
     """
-    caminho_xml = os.path.join(os.path.relpath(
-        cv2.__file__).replace('__init__.py', ''), 'data/haarcascade_frontalface_default.xml')
+    caminho_xml = os.path.join(cv2.data.haarcascades, 'haarcascade_frontalface_default.xml')
     face_cascade = cv2.CascadeClassifier(caminho_xml)
+
     
-    matriz = img_obj.matriz
+    matriz = img_obj.pixels
     
     gray = cv2.cvtColor(matriz, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
@@ -24,7 +24,7 @@ def processar_imagem(img_obj):
     for (x, y, w, h) in faces:
         cv2.rectangle(matriz, (x, y), (x+w, y+h), (0, 255, 0), 2)
     
-    img_obj.matriz = matriz
+    img_obj.pixels = matriz
     return img_obj
 
 
@@ -62,6 +62,7 @@ class Servidor():
         Função executada dentro da Thread para atender um único cliente.
         """
         print(f"Iniciou - Cliente: {client}")
+
         
         try:
             dados_recebidos = receber_mensagem(con)

@@ -8,8 +8,8 @@ import cv2
 RAIZ_PROJETO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ_PROJETO))
 
-from imagem import Imagem
-from protocolo import enviar_mensagem, receber_mensagem
+from utils.imagem import Imagem
+from utils.protocolo import enviar_mensagem, receber_mensagem
 
 
 class Cliente:
@@ -80,7 +80,7 @@ class Cliente:
 
             cv2.imshow(
                 "Imagem processada",
-                resultado.matriz
+                resultado.pixels
             )
             cv2.waitKey(0)
             cv2.destroyAllWindows()
